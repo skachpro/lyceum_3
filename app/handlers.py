@@ -360,7 +360,7 @@ async def alert_desk(message: Message):
         photo_url = f"https://raw.githubusercontent.com/skachpro/photos_lyceum_bot/refs/heads/main/photos/{photo_id}.jpg"
         await message.answer_photo(photo=photo_url, caption=text)
     else:
-        await message.amswer("Наразі Оголошень немає")
+        await message.answer("Наразі Оголошень немає")
 
 
 class QAstep(StatesGroup):
