@@ -118,10 +118,7 @@ async def prev_answer(callback_query: CallbackQuery, state: FSMContext):
         await callback_query.answer("Це був перший запис.")
 
 
-# @router.callback_query()
-# async def debug_callback(callback_query: CallbackQuery):
-#     print(f"Callback data received: {callback_query.data} 1")
-#     await callback_query.answer("Данные получены!")
+
 
 @router.message(F.text == 'Розклад 📋')
 async def lesson_plan(message: Message):
@@ -354,125 +351,15 @@ async def alert_desk(message: Message):
         al_desk = cur.execute("""
            SELECT photo_id,text FROM alert_desk ORDER BY id DESC LIMIT 1
         """).fetchall()
-    print(al_desk)
+    #print(al_desk)
     if al_desk:
         photo_id = al_desk[0][0]
         text = al_desk[0][1]
         photo_url = f"https://raw.githubusercontent.com/skachpro/photos_lyceum_bot/refs/heads/main/photos/{photo_id}.jpg"
-
-        #print(f'Photo ID {al_desk[1]}\nТекст {al_desk[2]}')
-        #await message.answer("".join(f"Photo: {data[1]}\nText:\n {data[2]}" for data in al_desk))
         await message.answer_photo(photo=photo_url, caption=text)
     else:
         await message.amswer("Наразі Оголошень немає")
-# class QAstep(StatesGroup):
-#     step = State()
-#     questions = State()
-#
-# @router.message(F.text == "Відповісти на питання")
-# async def qa_answ(message: Message, state: FSMContext):
-#     with sq.connect("app/lyceum.db") as con:
-#         #await state.set_state(QAstep.questions)
-#         await state.set_state(QAstep.step)
-#         cur = con.cursor()
-#         question = cur.execute("""
-#             SELECT * FROM question_answer WHERE answer = "None"
-#         """).fetchall()
-#         #await state.update_data(questions=question)
-#         await state.update_data(step=0)
-#         if question:
-#             print(question)
-#             await message.answer(f'Звернувся:\n<b>{question[0][1]}\n\n</b>текст:\n{question[0][2]}',parse_mode="html", reply_markup=kb.qa_navigation)
-#         else:
-#             print("Нема запитань")
-#
-#
-# @router.message(F.text == 'Далі ➡️')
-# async def next_que(message: Message, state: FSMContext):
-#     # Получаем данные состояния
-#     data = await state.get_data()
-#     step = data.get("step", 0) + 1  # По умолчанию step = 0
-#
-#     # Загружаем вопросы из базы данных
-#     with sq.connect("app/lyceum.db") as con:
-#         cur = con.cursor()
-#         questions = cur.execute("""
-#             SELECT * FROM question_answer WHERE answer = "None"
-#         """).fetchall()
-#
-#     # Логирование для отладки
-#     print(f"Полученные вопросы: {questions}")
-#     print(f"Текущий шаг: {step}")
-#
-#     # Проверяем, есть ли вопросы
-#     if not questions:
-#         await message.answer("Немає доступних питань.")
-#         return
-#
-#     # Проверяем, находится ли step в допустимом диапазоне
-#     if step < 0 or step >= len(questions):
-#         await message.answer("Немає більше питань.")
-#         return
-#
-#     # Увеличиваем шаг и обновляем состояние
-#     await state.update_data(step=step + 1)
-#
-#     # Отправляем текущий вопрос
-#     question = questions[step]
-#     await message.answer(
-#         f'Звернувся:\n<b>{question[1]}</b>\n\nТекст:\n{question[2]}',
-#         parse_mode="html",
-#         reply_markup=kb.qa_navigation
-#     )
-#
-# @router.message((F.text == emoji.emojize(f'Про Ліцей 🏫')) | (F.text == '/about_us'))
-# async def about_us(message: Message):
-#     await message.answer(f"""<b>Комунальний заклад загальної середньої освіти \n“Ліцей №3 імені Артема МазураХмельницької міської ради”</b>\n\nВ Ліцеї №3 імені Артема Мазура працюють відомі вчителі, автори підручників та посібників,\nнаставники переможців олімпіад,\nконкурсу-захисту МАН і спортивних змагань...<a href='http://tbl.km.ua/'>далі</a>\n\n""",reply_markup=kb.about, parse_mode='HTML')
-#
-# @router.message(F.text == '⬅️ Назад')
-# async def next_que(message: Message, state: FSMContext):
-#     print(1)
-#     data = await state.get_data()
-#     #questions = data.get("quetions")
-#     with sq.connect("app/lyceum.db") as con:
-#         cur = con.cursor()
-#         questions = cur.execute("""
-#                 SELECT * FROM question_answer WHERE answer = "None"
-#             """).fetchall()
-#     print(questions)
-#     step = data.get("step",len(questions))
-#     step = max(step - 1, 0)
-#     print(step)
-#
-#     await state.update_data(step=step)
-#     if step <= len(questions):
-#         await message.answer(f'Звернувся:\n<b>{questions[step][1]}\n\n</b>текст:\n{questions[step][2]}',parse_mode="html", reply_markup=kb.qa_navigation)
-# class Answer(StatesGroup):
-#     answer = State()
-# @router.message(F.text == '✏️ Відповісти')
-# async def que_answer(message: Message, state: FSMContext):
-#     await message.answer("Відповідайте.",reply_markup=kb.admin)
-#     data = await state.get_data()
-#     step = data['step']
-#
-#     with sq.connect("app/lyceum.db") as con:
-#         cur = con.cursor()
-#         questions = cur.execute("""
-#                 SELECT * FROM question_answer WHERE answer = "None"
-#             """).fetchall()
-#         if step <= len(questions):
-#             await message.delete()
-#             await message.answer(f'Повідомленя:\n<code>Від:<b>{questions[step][1]}</b>\n<i>{questions[step][2]}</i></code>\nПишіть відповідь:')
-#             print(questions[step])
-#     await state.clear()
-#     await state.set_state(Answer.answer)
-#
-# @router.message(Answer.answer)
-# async def answer(message: Message, state:FSMContext):
-#     await state.update_data(answer=message.text)
-#     data = await state.get_data()
-#     answer = data['answer']
-#     print(answer)
+
 
 class QAstep(StatesGroup):
     step = State()

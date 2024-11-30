@@ -18,9 +18,11 @@ def upload_to_github(file_name, file_content):
 
         path = f"photos/{file_name}"
         repo.create_file(path, f"Upload {file_name}", file_content)
-        return f"Файл {file_name} успішно завантажено в {path}"
+        print(f"Файл {file_name} успішно завантажено в {path}")
+        return
     except Exception as e:
-        return f"Помилка при завантаженні: {e}"
+        print(f"Помилка при завантаженні: {e}")
+        return
 
 
 g.close()
