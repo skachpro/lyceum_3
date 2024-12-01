@@ -133,7 +133,7 @@ async def alert_plan(callback_query: CallbackQuery):
         """).fetchone()
     if data:
         photo_id = data[0]
-        photo_url = f"https://raw.githubusercontent.com/skachpro/photos_lyceum_bot/refs/heads/main/photos/{photo_id}.jpg"
+        photo_url = f"https://raw.githubusercontent.com/skachpro/photos_lyceum_bot/refs/heads/main/photos/AgACAgIAAxkBAAIFjmdJ_SENu66ydLFppi5xgpJVTZpxAAIS4jEb1npRSizdC1npjreEAQADAgADeQADNgQ.jpg"
         await callback_query.message.delete()
         await callback_query.message.answer_photo(photo=photo_url, caption="Розклад Дзвінків")
     else:
