@@ -238,7 +238,10 @@ async def qa_res(message: Message, state: FSMContext):
 
 @router.message(or_f(Command("admin"),(F.text == "Я з Адміністрації школи 🏫🧑‍💼")))
 async def admin(message: Message):
-    await message.answer(f"Адмін Панель до ваших послуг",reply_markup=kb.admin)
+    if message.from_user.id != "6156445988":
+        return
+    else:
+        await message.answer(f"Адмін Панель до ваших послуг",reply_markup=kb.admin)
 
 
 class Alert(StatesGroup):
