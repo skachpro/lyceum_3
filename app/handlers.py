@@ -160,7 +160,7 @@ async def contacts(message: Message):
     )
 
 #Для Учнів
-@router.message(F.text == 'Я навчаюсь в Ліцеї 👨‍🎓')
+@router.message(F.text == 'Я навчаюсь в ліцеї 👨‍🎓')
 async def for_students(message: Message, state: FSMContext):
     await message.answer(f'Оберіть в якому ви класі ⬇️', reply_markup=kb.select_num_of_class)
     await state.set_state(RememberMe.user_id)
@@ -187,7 +187,7 @@ async def class_choosed(message: Message, state: FSMContext):
         await message.answer(answer, parse_mode='HTML', reply_markup=kb.start)
     await state.clear()
 
-@router.message(F.text=='Обрати Профіль 🔍')
+@router.message(F.text=='Обрати профіль 🔍')
 async def select_profile(message: Message):
     await message.reply(f'Обрати профіль можна у нашому Телеграм Боті для вибору профілю. Натисніть на кнопку під повідомленням щоб перейти в нього.',reply_markup=kb.profile)
 
@@ -236,7 +236,7 @@ async def qa_res(message: Message, state: FSMContext):
     ,parse_mode="HTML")
     await state.clear()
 
-@router.message(or_f(Command("admin"),(F.text == "Я з Адміністрації школи 🏫🧑‍💼")))
+@router.message(or_f(Command("admin"),(F.text == "Я з адміністрації школи 🏫🧑‍💼")))
 async def admin(message: Message):
     if message.from_user.id != 6156445988:
         return
@@ -347,7 +347,7 @@ async def call_schedule_set_photo(message: Message, state: FSMContext):
                 await message.answer("Не удалось скачать фото.")
     await message.answer("Фото збережено в Базі")
 
-@router.message(F.text=='Дошка Оголошень 📌')
+@router.message(F.text=='Дошка оголошень 📌')
 async def alert_desk(message: Message):
     with sq.connect("app/lyceum.db") as con:
         cur = con.cursor()

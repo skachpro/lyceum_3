@@ -8,20 +8,20 @@ import emoji
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
 
 start = ReplyKeyboardMarkup(keyboard=[
-    [KeyboardButton(text='Я навчаюсь в Ліцеї 👨‍🎓')],
+    [KeyboardButton(text='Я навчаюсь в ліцеї 👨‍🎓')],
     [KeyboardButton(text='Я не навчаюсь в ліцеї ❌👨‍🎓')],
-    [KeyboardButton(text='Я з Адміністрації школи 🏫🧑‍💼')]
+    [KeyboardButton(text='Я з адміністрації школи 🏫🧑‍💼')]
 ])
 
 not_for_students = ReplyKeyboardMarkup(keyboard=[
     [ KeyboardButton(text="Контакти ☎️"), KeyboardButton(text=f"Про Ліцей {emoji.emojize(':school:')}")],
     
-    [KeyboardButton(text=f"Обрати Профіль 🔍")]
+    [KeyboardButton(text=f"Обрати профіль 🔍")]
 ])
 
 for_students = ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text=f'Розклад 📋'),
-    KeyboardButton(text="Дошка Оголошень 📌")],
+    KeyboardButton(text="Дошка оголошень 📌")],
     [KeyboardButton(text="Запитання/Відповідь 💬")],
     
 ])
@@ -33,13 +33,13 @@ select_num_of_class = ReplyKeyboardMarkup(keyboard=[
 
 kbd_for_young_stud = ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text=f'Розклад 📋')],
-    [KeyboardButton(text="Дошка Оголошень 📌"), KeyboardButton(text="Запитання/Відповідь 💬")],
+    [KeyboardButton(text="Дошка оголошень 📌"), KeyboardButton(text="Запитання/Відповідь 💬")],
     
-    [KeyboardButton(text=f"Обрати Профіль 🔍", url="https://t.me/Lyceum_Profile_Selection_bot")]
+    [KeyboardButton(text=f"Обрати профіль 🔍", url="https://t.me/Lyceum_Profile_Selection_bot")]
 ])
 
 profile = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text=f"Обрати Профіль 🔍", url="https://t.me/Lyceum_Profile_Selection_bot")]
+    [InlineKeyboardButton(text=f"Обрати профіль 🔍", url="https://t.me/Lyceum_Profile_Selection_bot")]
 ])
 
 qa = InlineKeyboardMarkup(inline_keyboard=[
@@ -50,7 +50,7 @@ qa = InlineKeyboardMarkup(inline_keyboard=[
 admin = ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text=f"Відповісти на питання")],
     [KeyboardButton(text=f'Дошка оголошень')],
-    [KeyboardButton(text=f"Розклад Дзвінків")]
+    [KeyboardButton(text=f"Розклад дзвінків")]
 ])
 
 qa_navigation = ReplyKeyboardMarkup(
@@ -79,6 +79,6 @@ skip_photo = InlineKeyboardMarkup(inline_keyboard=[
 ])
 
 rozklad = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='Розклад Дзвінків 🔔', callback_data='alert_plan')],
-    [InlineKeyboardButton(text='Розклад Уроків 📋', callback_data='lesson_plan',url='https://client.rozklad.org/files/rozklad/rr/r_2755.html?1732728631375#c')]
+    [InlineKeyboardButton(text='Розклад дзвінків 🔔', callback_data='alert_plan')],
+    [InlineKeyboardButton(text='Розклад уроків 📋', callback_data='lesson_plan',url='https://client.rozklad.org/files/rozklad/rr/r_2755.html?1732728631375#c')]
 ])
