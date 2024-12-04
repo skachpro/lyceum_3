@@ -120,7 +120,7 @@ async def prev_answer(callback_query: CallbackQuery, state: FSMContext):
 
 @router.message(F.text == 'Розклад 📋')
 async def lesson_plan(message: Message):
-    await message.answer("Ви можете <b>переглянути Розклад дзвінків,</b> або <Розклад уроків за посиланням.</b>", parse_mode="html",reply_markup=kb.rozklad)
+    await message.answer("Ви можете <b>переглянути Розклад дзвінків,</b> або <b>Розклад уроків за посиланням.</b>", parse_mode="html",reply_markup=kb.rozklad)
 
 @router.callback_query(F.data == 'alert_plan')
 async def alert_plan(callback_query: CallbackQuery):
