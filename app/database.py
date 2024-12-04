@@ -58,8 +58,8 @@ with sq.connect("app/lyceum.db") as con:
     #     INSERT INTO alert_desk (photo_id,text) VALUES(?,?)
     # """,("AgACAgIAAxkBAAMuZxaN9-2Lpwgcag93VdxwGV5OI8IAAnflMRvoY7FIdOlv1gS78HYBAAMCAAN5AAM2BA","ТЕКСТ ТЕКСТ текст текст текст текст текст текст текст текст"))
 
-    cur.execute("DELETE FROM remember_me WHERE user_id = ?", ("6156445988",))
-    cur.execute("DELETE FROM remember_me WHERE user_id = ?", ("1397873368",))
+    # cur.execute("DELETE FROM remember_me WHERE user_id = ?", ("6156445988",))
+    # cur.execute("DELETE FROM remember_me WHERE user_id = ?", ("1397873368",))
     #cur.execute("DELETE FROM alert_desk WHERE id = ?", ("44",))
 
 

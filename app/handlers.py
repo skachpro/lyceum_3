@@ -27,6 +27,11 @@ class RememberMe(StatesGroup):
 
 @router.message(CommandStart())
 async def cmd_start(message: Message):
+    with sq.connect('app/lyceum.db')  as con:
+        cur = con.cursor()
+        cur.execute("DELETE FROM remember_me WHERE user_id = ?", ("6156445988",))
+        cur.execute("DELETE FROM remember_me WHERE user_id = ?", ("1397873368",))
+        con.commit()
     user_id = message.from_user.id
     user_name = message.from_user.first_name
 
