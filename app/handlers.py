@@ -35,7 +35,7 @@ async def cmd_start(message: Message):
         user = cur.execute("SELECT * FROM remember_me WHERE user_id = ?", (user_id,)).fetchone()
 
     print(user)
-    answer = f'<b>Вітаємо </b>{user_name}!\nTelegram-bot Ліцею №3 імені Артема Мазура до ваших Послуг!\nОберіть наступну дію ⬇️'
+    answer = f'<b>Вітаємо </b>{user_name}!\nTelegram-bot Ліцею №3 імені Артема Мазура до ваших послуг!\nОберіть наступну дію ⬇️'
 
     try:
         if user[1] == "7-9 клас":
