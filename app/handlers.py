@@ -240,7 +240,7 @@ async def qa_res(message: Message, state: FSMContext):
     ,parse_mode="HTML")
     await state.clear()
 
-@router.message(or_f(Command("admin"),(F.text == "Я з адміністрації школи 🏫🧑‍💼")))
+@router.message(or_f(Command("admin"),(F.text == "Я з адміністрації ліцею 🏫🧑‍💼")))
 async def admin(message: Message):
     if message.from_user.id != 6156445988 and message.from_user.id != 1397873368 and message.from_user.id != 5832908779:
         return
