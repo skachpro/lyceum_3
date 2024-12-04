@@ -303,13 +303,11 @@ async def get_text_for_alert_desk(message: Message, state: FSMContext):
                 file_content = await resp.read()
                 file_name = f"{photo_id}.jpg"
 
-                # Загружаем фото в GitHub
                 result = upload_to_github(file_name, file_content)
                 await message.answer(result)
                 photo_url = f"https://raw.githubusercontent.com/skachpro/photos_lyceum_bot/refs/heads/main/photos/{photo_id}.jpg"
-                #await message.answer(photo_url)
             else:
-                await message.answer("Не удалось скачать фото.")
+                await message.answer("Не вдалося завантажити фото.")
 
     await message.answer_photo(photo=photo_url, caption=text)
 
