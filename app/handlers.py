@@ -365,7 +365,7 @@ class Stolova(StatesGroup):
 @router.message(F.text == 'Меню їдальні')
 async def stolovka_admin(message: Message, state: FSMContext):
     await state.set_state(Stolova.photo)
-    await message.answer("Скиньте фото Меню")
+    await message.answer("Додайте фото Меню")
 
 @router.message(Stolova.photo)
 async def stolova_photo(message: Message, state: FSMContext):
