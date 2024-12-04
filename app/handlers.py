@@ -237,7 +237,7 @@ async def qa_res(message: Message, state: FSMContext):
 
 @router.message(or_f(Command("admin"),(F.text == "Я з адміністрації школи 🏫🧑‍💼")))
 async def admin(message: Message):
-    if message.from_user.id != 6156445988:
+    if message.from_user.id != 6156445988 and message.from_user.id != 1397873368:
         return
     else:
         await message.answer(f"Адмінпанель до ваших послуг",reply_markup=kb.admin)

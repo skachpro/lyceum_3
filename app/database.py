@@ -42,6 +42,7 @@ with sq.connect("app/lyceum.db") as con:
         )
     """)
 
+
     cur.execute("""
         CREATE TABLE IF NOT EXISTS question_answer(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
