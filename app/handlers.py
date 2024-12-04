@@ -35,7 +35,7 @@ async def cmd_start(message: Message):
         user = cur.execute("SELECT * FROM remember_me WHERE user_id = ?", (user_id,)).fetchone()
 
     print(user)
-    answer = f'<b>Вітаємо </b>{user_name}!\nTelegram-bot Ліцею №3 імені Артема Мазура до ваших Послуг!\nОберіть ⬇️'
+    answer = f'<b>Вітаємо </b>{user_name}!\nTelegram-bot Ліцею №3 імені Артема Мазура до ваших Послуг!\nОберіть наступну дію ⬇️'
 
     try:
         if user[1] == "7-9 клас":
@@ -63,11 +63,9 @@ async def check_for_answers(callback_query: CallbackQuery, state: FSMContext):
         await callback_query.message.answer("Немає доступних відповідей на запитання.", parse_mode="html")
         return
 
-    # Сохраняем список вопросов в состояние
     await state.set_state(Answers.step)
     await state.update_data(questions=questions, step=0)
 
-    # Отображаем первый ответ
     current_question = questions[0]
     response = (
         f"Запитання:\n<pre><code>{current_question[1]}:\n{current_question[2]}</code></pre>\n"
@@ -75,7 +73,7 @@ async def check_for_answers(callback_query: CallbackQuery, state: FSMContext):
     )
     await callback_query.message.edit_text(response, parse_mode="html", reply_markup=kb.answer_nav)
 
-# Навигация: следующий ответ
+
 @router.callback_query(F.data == "next")
 async def next_answer(callback_query: CallbackQuery, state: FSMContext):
     data = await state.get_data()
@@ -122,7 +120,7 @@ async def prev_answer(callback_query: CallbackQuery, state: FSMContext):
 
 @router.message(F.text == 'Розклад 📋')
 async def lesson_plan(message: Message):
-    await message.answer("Ви можете <b>переглянути Розклад дзвінків,</b> або <b>переглянути розклад уроків на сайті.</b>", parse_mode="html",reply_markup=kb.rozklad)
+    await message.answer("Ви можете <b>переглянути Розклад дзвінків,</b> або <Розклад уроків за посиланням.</b>", parse_mode="html",reply_markup=kb.rozklad)
 
 @router.callback_query(F.data == 'alert_plan')
 async def alert_plan(callback_query: CallbackQuery):
@@ -135,13 +133,13 @@ async def alert_plan(callback_query: CallbackQuery):
         photo_id = data[0]
         photo_url = f"https://raw.githubusercontent.com/skachpro/photos_lyceum_bot/refs/heads/main/photos/AgACAgIAAxkBAAIFjmdJ_SENu66ydLFppi5xgpJVTZpxAAIS4jEb1npRSizdC1npjreEAQADAgADeQADNgQ.jpg"
         await callback_query.message.delete()
-        await callback_query.message.answer_photo(photo=photo_url, caption="Розклад Дзвінків")
+        await callback_query.message.answer_photo(photo=photo_url, caption="Розклад дзвінків")
     else:
-        await callback_query.message.answer("Фото Не знайдено в Базі")
+        await callback_query.message.answer("Фото не знайдено в базі")
 #Не для Учнів
 @router.message(F.text == 'Я не навчаюсь в ліцеї ❌👨‍🎓')
 async def not_for_students(message: Message):
-    await message.answer(f'Оберіть Наступну дію!', reply_markup=kb.not_for_students)
+    await message.answer(f'Оберіть наступну дію!', reply_markup=kb.not_for_students)
 
 
 @router.message(F.text == 'Контакти ☎️')
@@ -150,7 +148,8 @@ async def contacts(message: Message):
         (
             "<b>З нами можна зв'язатись:</b>\n\n"
             "<b>Email:</b> <a href='mailto:tbl@ua.fm'>tbl@ua.fm</a>\n"
-            "<b>Номер телефону:</b>\n"
+            "<b>Номери телефону:</b>\n"
+            "  • <a href='tel:+0382674323'>+0382674323</a>\n"
             "  • <a href='tel:+38067600920'>+38067600920</a>\n"
             "  • <a href='tel:+380975581966'>+380975581966</a>\n"
             "  • <a href='tel:+0967235770'>+0967235770</a>\n"
@@ -189,14 +188,14 @@ async def class_choosed(message: Message, state: FSMContext):
 
 @router.message(F.text=='Обрати профіль 🔍')
 async def select_profile(message: Message):
-    await message.reply(f'Обрати профіль можна у нашому Телеграм Боті для вибору профілю. Натисніть на кнопку під повідомленням щоб перейти в нього.',reply_markup=kb.profile)
+    await message.reply(f'Обрати профіль можна в іншому Телеграм-боті. Для переходу натисніть на кнопку під повідомленням.',reply_markup=kb.profile)
 
 @router.message(F.text == 'Запитання/Відповідь 💬')
 async def qa(message:Message):
-    await message.answer(f"<b>Напишіть свою запитання/пропозицію.</b>\nАбо перегляньте запитання на які дали відповідь.",parse_mode="html",reply_markup=kb.qa)
+    await message.answer(f"<b>Напишіть своє запитання/пропозицію.</b>\nАбо перегляньте запитання на які вже надали відповідь.",parse_mode="html",reply_markup=kb.qa)
 
 
-@router.message(F.text == 'Про Ліцей 🏫')
+@router.message(F.text == 'Про ліцей 🏫')
 async def about_lyceum(message: Message):
     await message.answer_photo(photo="https://lh3.googleusercontent.com/p/AF1QipNxPlNdabKtiwUqr-0qGomj8XwD2bn0FURD-7Z7=s680-w680-h510",caption=f"""<b>Комунальний заклад загальної середньої освіти \n“Ліцей №3 імені Артема МазураХмельницької міської ради”</b>\n\nВ Ліцеї №3 імені Артема Мазура працюють відомі вчителі, автори підручників та посібників,\nнаставники переможців олімпіад,\nконкурсу-захисту МАН і спортивних змагань...<a href='http://tbl.km.ua/'>далі</a>\n\n""", parse_mode="html")
 
@@ -217,7 +216,7 @@ async def qa_que(message: Message, state: FSMContext):
     await state.update_data(name=message.text)
     await state.set_state(QA.que)
     await message.answer(
-        "Дякуємо! Тепер напишіть своє запитання, і ми обов'язково передамо його адміністрації школи:"
+        "Дякуємо! Тепер напишіть своє запитання і ми обов'язково передамо його адміністрації школи:"
     )
 
 @router.message(QA.que)
@@ -241,7 +240,7 @@ async def admin(message: Message):
     if message.from_user.id != 6156445988:
         return
     else:
-        await message.answer(f"Адмін Панель до ваших послуг",reply_markup=kb.admin)
+        await message.answer(f"Адмінпанель до ваших послуг",reply_markup=kb.admin)
 
 
 class Alert(StatesGroup):
@@ -251,7 +250,7 @@ class Alert(StatesGroup):
 @router.message(F.text == 'Дошка оголошень')
 async def al_desk_admin(message: Message,state:FSMContext):
     await state.set_state(Alert.photo_id)
-    await message.answer(f'Пришліть Фотографію.', reply_markup=kb.skip_photo)
+    await message.answer(f'Пришліть фотографію.', reply_markup=kb.skip_photo)
 
 @router.callback_query(F.data == 'skip_photo')
 async def skip_photo(callback_query: CallbackQuery, state: FSMContext):
@@ -261,7 +260,7 @@ async def skip_photo(callback_query: CallbackQuery, state: FSMContext):
             INSERT INTO alert_desk (photo_id) VALUES (?)
         """, ("None",))
         con.commit()
-    await callback_query.message.edit_text("Введіть текст для дошки оголошення.")
+    await callback_query.message.edit_text("Введіть текст для дошки оголошень.")
     await state.set_state(Alert.text)
 
 
@@ -313,7 +312,7 @@ async def get_text_for_alert_desk(message: Message, state: FSMContext):
 
 class Call_Schedule(StatesGroup):
     photo = State()
-@router.message(F.text == 'Розкалд Дзвінків')
+@router.message(F.text == 'Розкалд дзвінків')
 async def call_schedule_admin(message: Message, state: FSMContext):
     await message.answer("Пришліть фото Розкладу дзвінків")
     await state.set_state(Call_Schedule.photo)
@@ -343,9 +342,9 @@ async def call_schedule_set_photo(message: Message, state: FSMContext):
                 await message.answer_photo(photo=photo_url)
             else:
                 await message.answer("Не вдалось скачати фото.")
-    await message.answer("Фото збережено в Базі")
+    await message.answer("Фото збережено в базі")
 
-@router.message(F.text == "Меню їдальня 🍽️")
+@router.message(F.text == "Меню їдальні 🍽️")
 async def stolovka(message: Message):
     with sq.connect("app/lyceum.db") as con:
         cur = con.cursor()
@@ -358,12 +357,12 @@ async def stolovka(message: Message):
         photo_url = f"https://raw.githubusercontent.com/skachpro/photos_lyceum_bot/refs/heads/main/photos/{photo_id[0][0]}.jpg"
         await message.answer_photo(photo=photo_url, caption='Меню ідальні')
     else:
-        await message.answer("Нема Меню")
+        await message.answer("Меню не додано")
 
 class Stolova(StatesGroup):
     photo = State()
 
-@router.message(F.text == 'Меню їдальня')
+@router.message(F.text == 'Меню їдальні')
 async def stolovka_admin(message: Message, state: FSMContext):
     await state.set_state(Stolova.photo)
     await message.answer("Скиньте фото Меню")
@@ -394,7 +393,7 @@ async def stolova_photo(message: Message, state: FSMContext):
                     await message.answer_photo(photo=photo_url)
             else:
                 await message.answer("Не вдалося скачати фото.")
-    await message.answer("Фото збережено в Базі")
+    await message.answer("Фото збережено в базі")
 
 
 @router.message(F.text=='Дошка оголошень 📌')
@@ -411,7 +410,7 @@ async def alert_desk(message: Message):
         photo_url = f"https://raw.githubusercontent.com/skachpro/photos_lyceum_bot/refs/heads/main/photos/{photo_id}.jpg"
         await message.answer_photo(photo=photo_url, caption=text)
     else:
-        await message.answer("Наразі Оголошень немає")
+        await message.answer("Наразі оголошень немає")
 
 
 class QAstep(StatesGroup):
