@@ -289,7 +289,7 @@ async def get_text_for_alert_desk(message: Message, state: FSMContext):
     await state.update_data(text=text)
     data = await state.get_data()
     photo_id = data.get("photo_id", "null")
-    print(photo_id)
+    print("Фотка:",photo_id)
 
     with sq.connect("app/lyceum.db") as con:
         cur = con.cursor()
