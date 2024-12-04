@@ -339,13 +339,63 @@ async def call_schedule_set_photo(message: Message, state: FSMContext):
                 file_content = await resp.read()
                 file_name = f"{photo_id}.jpg"
                 photo_url = f"https://raw.githubusercontent.com/skachpro/photos_lyceum_bot/refs/heads/main/photos/{photo_id}.jpg"
-                # Загружаем фото в GitHub
                 result = upload_to_github(file_name, file_content)
-                #await message.answer(result)
                 await message.answer_photo(photo=photo_url)
             else:
-                await message.answer("Не удалось скачать фото.")
+                await message.answer("Не вдалось скачати фото.")
     await message.answer("Фото збережено в Базі")
+
+@router.message(F.text == "Меню їдальня 🍽️")
+async def stolovka(message: Message):
+    with sq.connect("app/lyceum.db") as con:
+        cur = con.cursor()
+        photo_id = cur.execute("""
+            SELECT photo_id FROM eat ORDER BY id DESC LIMIT 1
+        """).fetchall()
+        con.commit()
+    print(photo_id)
+    if photo_id:
+        photo_url = f"https://raw.githubusercontent.com/skachpro/photos_lyceum_bot/refs/heads/main/photos/{photo_id[0][0]}.jpg"
+        await message.answer_photo(photo=photo_url, caption='Меню ідальні')
+    else:
+        await message.answer("Нема Меню")
+
+class Stolova(StatesGroup):
+    photo = State()
+
+@router.message(F.text == 'Меню їдальня')
+async def stolovka_admin(message: Message, state: FSMContext):
+    await state.set_state(Stolova.photo)
+    await message.answer("Скиньте фото Меню")
+
+@router.message(Stolova.photo)
+async def stolova_photo(message: Message, state: FSMContext):
+    photo_id = message.photo[-1].file_id
+    await state.update_data(photo=photo_id)
+
+    with sq.connect("app/lyceum.db") as con:
+        cur = con.cursor()
+        cur.execute("""
+            INSERT INTO eat(photo_id) VALUES(?)
+        """, (photo_id,))
+        con.commit()
+    await state.clear()
+    file_info = await bot.get_file(photo_id)
+    file_path = file_info.file_path
+
+    async with aiohttp.ClientSession() as session:
+        async with session.get(f"https://api.telegram.org/file/bot{os.getenv('BOT_API')}/{file_path}") as resp:
+            if resp.status == 200:
+                file_content = await resp.read()
+                file_name = f"{photo_id}.jpg"
+                photo_url = f"https://raw.githubusercontent.com/skachpro/photos_lyceum_bot/refs/heads/main/photos/{photo_id}.jpg"
+                result = upload_to_github(file_name, file_content)
+                if result:
+                    await message.answer_photo(photo=photo_url)
+            else:
+                await message.answer("Не вдалося скачати фото.")
+    await message.answer("Фото збережено в Базі")
+
 
 @router.message(F.text=='Дошка оголошень 📌')
 async def alert_desk(message: Message):

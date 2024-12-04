@@ -36,6 +36,13 @@ with sq.connect("app/lyceum.db") as con:
     """)
 
     cur.execute("""
+        CREATE TABLE IF NOT EXISTS eat(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        photo_id TEXT
+        )
+    """)
+
+    cur.execute("""
         CREATE TABLE IF NOT EXISTS question_answer(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id TEXT,

@@ -23,7 +23,7 @@ for_students = ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text=f'Розклад 📋'),
     KeyboardButton(text="Дошка оголошень 📌")],
     [KeyboardButton(text="Запитання/Відповідь 💬")],
-    
+    [KeyboardButton(text="Меню їдальня 🍽️")]
 ])
 
 
@@ -32,9 +32,9 @@ select_num_of_class = ReplyKeyboardMarkup(keyboard=[
 ])
 
 kbd_for_young_stud = ReplyKeyboardMarkup(keyboard=[
-    [KeyboardButton(text=f'Розклад 📋')],
-    [KeyboardButton(text="Дошка оголошень 📌"), KeyboardButton(text="Запитання/Відповідь 💬")],
-    
+    [KeyboardButton(text=f'Розклад 📋'),KeyboardButton(text="Дошка оголошень 📌")],
+    [KeyboardButton(text="Запитання/Відповідь 💬")],
+    [KeyboardButton(text="Меню їдальня 🍽️")],
     [KeyboardButton(text=f"Обрати профіль 🔍", url="https://t.me/Lyceum_Profile_Selection_bot")]
 ])
 
@@ -50,7 +50,8 @@ qa = InlineKeyboardMarkup(inline_keyboard=[
 admin = ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text=f"Відповісти на питання")],
     [KeyboardButton(text=f'Дошка оголошень')],
-    [KeyboardButton(text=f"Розклад дзвінків")]
+    [KeyboardButton(text=f"Розклад дзвінків")],
+    [KeyboardButton(text="Меню їдальня")]
 ])
 
 qa_navigation = ReplyKeyboardMarkup(
