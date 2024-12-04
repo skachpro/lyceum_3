@@ -399,6 +399,7 @@ async def stolova_photo(message: Message, state: FSMContext):
             else:
                 await message.answer("Не вдалося скачати фото.")
     await message.answer("Фото збережено в базі")
+    await message.answer_photo(photo=photo_url)
 
 
 @router.message(F.text=='Дошка оголошень 📌')
