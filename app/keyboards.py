@@ -10,13 +10,13 @@ from aiogram.utils.keyboard import ReplyKeyboardBuilder
 start = ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text='Я навчаюсь в ліцеї 👨‍🎓')],
     [KeyboardButton(text='Я не навчаюсь в ліцеї ❌👨‍🎓')],
-    [KeyboardButton(text='Я з адміністрації школи 🏫🧑‍💼')]
+    [KeyboardButton(text='Я з адміністрації ліцею 🏫🧑‍💼')]
 ])
 
 not_for_students = ReplyKeyboardMarkup(keyboard=[
     [ KeyboardButton(text="Контакти ☎️"), KeyboardButton(text=f"Про Ліцей {emoji.emojize(':school:')}")],
     
-    [KeyboardButton(text=f"Обрати профіль 🔍")]
+    [KeyboardButton(text=f"Обрати профіль у 10 класі 🔍")]
 ])
 
 for_students = ReplyKeyboardMarkup(keyboard=[
@@ -35,11 +35,11 @@ kbd_for_young_stud = ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text=f'Розклад 📋'),KeyboardButton(text="Дошка оголошень 📌")],
     [KeyboardButton(text="Запитання/Відповідь 💬")],
     [KeyboardButton(text="Меню їдальні 🍽️")],
-    [KeyboardButton(text=f"Обрати профіль 🔍", url="https://t.me/Lyceum_Profile_Selection_bot")]
+    [KeyboardButton(text=f"Обрати профіль у 10 класі 🔍", url="https://t.me/Lyceum_Profile_Selection_bot")]
 ])
 
 profile = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text=f"Обрати профіль 🔍", url="https://t.me/Lyceum_Profile_Selection_bot")]
+    [InlineKeyboardButton(text=f"Обрати профіль у 10 класі 🔍", url="https://t.me/Lyceum_Profile_Selection_bot")]
 ])
 
 qa = InlineKeyboardMarkup(inline_keyboard=[

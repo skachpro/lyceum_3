@@ -191,7 +191,7 @@ async def class_choosed(message: Message, state: FSMContext):
         await message.answer(answer, parse_mode='HTML', reply_markup=kb.start)
     await state.clear()
 
-@router.message(F.text=='Обрати профіль 🔍')
+@router.message(F.text=='Обрати профіль у 10 класі 🔍')
 async def select_profile(message: Message):
     await message.reply(f'Обрати профіль можна в іншому Телеграм-боті. Для переходу натисніть на кнопку під повідомленням.',reply_markup=kb.profile)
 
