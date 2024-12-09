@@ -32,7 +32,7 @@ async def cmd_start(message: Message):
     user_id = message.from_user.id
     user_name = message.from_user.first_name
 
-    user = await db.execute_query("ELECT * FROM remember_me WHERE user_id = %s", user_id,fetch="fetchone")
+    user = await db.execute_query("SELECT * FROM remember_me WHERE user_id = %s", user_id,fetch="fetchone")
 
     print(user)
     answer = f'<b>Вітаємо </b>{user_name}!\nTelegram-bot Ліцею №3 імені Артема Мазура до ваших послуг!\nОберіть наступну дію ⬇️'
