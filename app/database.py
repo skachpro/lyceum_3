@@ -2,7 +2,7 @@ import os
 import pymysql
 from aiomysql import create_pool
 from aiomysql.pool import Pool
-
+from datetime import *
 # Глобальна змінна для зберігання пулу з'єднань
 db_pool: Pool | None = None  # Указан тип Pool для db_pool
 
@@ -47,7 +47,7 @@ def execute_query_sync(query, params=None):
         connection.close()
 
 
-async def execute_query(query, params=None):
+async def execute_query(query, params=None, fetch="fetchall"):
     """Асинхронне виконання SQL-запиту."""
     global db_pool
     if not db_pool:
@@ -55,8 +55,12 @@ async def execute_query(query, params=None):
     async with db_pool.acquire() as conn:
         async with conn.cursor() as cur:
             await cur.execute(query, params or ())
-            if query.strip().lower().startswith("select"):
+            if query.strip().lower().startswith("select") and fetch == "fetchall":
                 return await cur.fetchall()
+            elif query.strip().lower().startswith("select") and fetch == "fetchone":
+                return await cur.fetchone()
+
+
 
 
 async def create_tables():
@@ -105,3 +109,36 @@ async def create_tables():
         )
     """)
     print("Таблиці створено або вже існують")
+
+async def remember_me(user_id, user_class):
+    global db_pool
+    if not db_pool:
+        raise RuntimeError("Database pool is not initalized")
+    async with db_pool.acquire() as conn:
+        async with conn.cursor() as cur:
+            await cur.execute("""
+                INSERT INTO remember_me (user_id,user_class) VALUES(%s,%s)
+            """, (user_id, user_class))
+
+async def que_user(user_id,name,question):
+    global db_pool
+    if not db_pool:
+        raise RuntimeError("Database pool is not initalized")
+    now = datetime.now()
+    time = now.strftime("%Y-%m-%d %H:%M:%S")
+    async with db_pool.acquire() as conn:
+        async with conn.cursor() as cur:
+            await cur.execute("""
+                INSERT INTO question_answer(user_id,name,question,time_que) VALUES(%s,%s,%s,%s)
+            """, (user_id,name,question,time))
+async def del_user(query,*users):
+    global db_pool
+    if not db_pool:
+        raise RuntimeError("Database pool is not initalized")
+    async with db_pool.acquire() as conn:
+        async with conn.cursor() as cur:
+            for user in users:
+                try:
+                    await cur.execute(query, (user,))
+                except Exception as e:
+                    print(f"Помилка видалення користовача {user}: {e}")

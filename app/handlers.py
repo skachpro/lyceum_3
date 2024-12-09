@@ -7,6 +7,7 @@ from aiogram.filters import CommandStart, Command
 from aiogram.types import Message, CallbackQuery, InputFile
 
 import app.keyboards as kb
+
 from app import database as db
 import os
 from dotenv import load_dotenv
@@ -27,17 +28,11 @@ class RememberMe(StatesGroup):
 
 @router.message(CommandStart())
 async def cmd_start(message: Message):
-    with sq.connect('app/lyceum.db')  as con:
-        cur = con.cursor()
-        cur.execute("DELETE FROM remember_me WHERE user_id = ?", ("6156445988",))
-        cur.execute("DELETE FROM remember_me WHERE user_id = ?", ("1397873368",))
-        con.commit()
+    await db.del_user("DELETE FROM remember_me WHERE user_id = ?", 6156445988, 1397873368)
     user_id = message.from_user.id
     user_name = message.from_user.first_name
 
-    with sq.connect("app/lyceum.db") as con:
-        cur = con.cursor()
-        user = cur.execute("SELECT * FROM remember_me WHERE user_id = ?", (user_id,)).fetchone()
+    user = await db.execute_query("ELECT * FROM remember_me WHERE user_id = %s", user_id,fetch="fetchone")
 
     print(user)
     answer = f'<b>Вітаємо </b>{user_name}!\nTelegram-bot Ліцею №3 імені Артема Мазура до ваших послуг!\nОберіть наступну дію ⬇️'
@@ -55,15 +50,12 @@ class Answers(StatesGroup):
 
 @router.callback_query(F.data == 'check_for_answer')
 async def check_for_answers(callback_query: CallbackQuery, state: FSMContext):
-    with sq.connect("app/lyceum.db") as con:
-        cur = con.cursor()
-        questions = cur.execute("""
-            SELECT id, name, question, answer 
-            FROM question_answer 
-            WHERE answer != ? 
-            LIMIT 5
-        """, ("None",)).fetchall()
 
+    questions = await db.execute_query("""SELECT id, name, question, answer 
+        FROM question_answer 
+        WHERE answer != %s 
+        LIMIT 5
+    """)
     if not questions:
         await callback_query.message.answer("Немає доступних відповідей на запитання.", parse_mode="html")
         return
@@ -129,11 +121,8 @@ async def lesson_plan(message: Message):
 
 @router.callback_query(F.data == 'alert_plan')
 async def alert_plan(callback_query: CallbackQuery):
-    with sq.connect("app/lyceum.db") as con:
-        cur = con.cursor()
-        data = cur.execute("""
-            SELECT photo_id FROM call_schedule ORDER BY id DESC LIMIT 1
-        """).fetchone()
+
+    data = await db.execute_query("SELECT photo_id FROM call_schedule ORDER BY id DESC LIMIT 1",fetch="fetchone")
     if data:
         photo_id = data[0]
         photo_url = f"https://raw.githubusercontent.com/skachpro/photos_lyceum_bot/refs/heads/main/photos/AgACAgIAAxkBAAIFjmdJ_SENu66ydLFppi5xgpJVTZpxAAIS4jEb1npRSizdC1npjreEAQADAgADeQADNgQ.jpg"
@@ -231,9 +220,7 @@ async def qa_res(message: Message, state: FSMContext):
     name = data.get("name")
     question = message.text
 
-    now = datetime.now()
-    time = now.strftime("%Y-%m-%d %H:%M:%S")
-    await db.que_user(user_id,name,question,time)
+    await db.que_user(user_id,name,question)
 
     await message.answer(
         f"Дякуємо, <b>{name}</b>! Ваше запитання отримано:\n\n{question}"
@@ -259,12 +246,10 @@ async def al_desk_admin(message: Message,state:FSMContext):
 
 @router.callback_query(F.data == 'skip_photo')
 async def skip_photo(callback_query: CallbackQuery, state: FSMContext):
-    with sq.connect("app/lyceum.db") as con:
-        cur = con.cursor()
-        cur.execute("""
-            INSERT INTO alert_desk (photo_id) VALUES (?)
-        """, ("None",))
-        con.commit()
+
+    await db.execute_query("""
+        INSERT INTO alert_desk (photo_id) VALUES (%s)
+    """, ("None",))
     await callback_query.message.edit_text("Введіть текст для дошки оголошень.")
     await state.set_state(Alert.text)
 
@@ -273,13 +258,9 @@ async def skip_photo(callback_query: CallbackQuery, state: FSMContext):
 async def get_photo(message: Message, state: FSMContext):
     photo_id = message.photo[-1].file_id
     await state.update_data(photo_id=photo_id)
-    with sq.connect("app/lyceum.db") as con:
-        cur = con.cursor()
-        cur.execute("""
-                INSERT INTO alert_desk (photo_id) VALUES (?)
-            """, (photo_id,))
-        con.commit()
-
+    await db.execute_query("""
+        INSERT INTO alert_desk (photo_id) VALUES (%s)
+    """,(photo_id,))
     await message.answer("Фото отримано!\nНапишіть текст оголошення")
     await state.set_state(Alert.text)
 
@@ -291,12 +272,9 @@ async def get_text_for_alert_desk(message: Message, state: FSMContext):
     photo_id = data.get("photo_id", "null")
     print("Фотка:",photo_id)
 
-    with sq.connect("app/lyceum.db") as con:
-        cur = con.cursor()
-        cur.execute("""
-            INSERT INTO alert_desk (photo_id, text) VALUES (?, ?)
-        """, (photo_id, text))
-        con.commit()
+    await db.execute_query("""
+        INSERT INTO alert_desk (photo_id, text) VALUES (%s,%s)
+    """, (photo_id,text))
 
     file_info = await bot.get_file(photo_id)
     file_path = file_info.file_path
@@ -326,12 +304,7 @@ async def call_schedule_admin(message: Message, state: FSMContext):
 async def call_schedule_set_photo(message: Message, state: FSMContext):
     photo_id = message.photo[-1].file_id
     await state.update_data(photo=photo_id)
-    with sq.connect("app/lyceum.db") as con:
-        cur = con.cursor()
-        cur.execute("""
-            INSERT INTO call_schedule(photo_id) VALUES (?)
-        """, (photo_id,))
-        con.commit()
+    await db.execute_query("""INSERT INTO call_schedule(photo_id) VALUES (%s)""", (photo_id,))
     await state.clear()
 
     file_info = await bot.get_file(photo_id)
@@ -351,12 +324,9 @@ async def call_schedule_set_photo(message: Message, state: FSMContext):
 
 @router.message(F.text == "Меню їдальні 🍽️")
 async def stolovka(message: Message):
-    with sq.connect("app/lyceum.db") as con:
-        cur = con.cursor()
-        photo_id = cur.execute("""
-            SELECT photo_id FROM eat ORDER BY id DESC LIMIT 1
-        """).fetchall()
-        con.commit()
+    photo_id = await db.execute_query("""SELECT photo_id FROM eat ORDER BY id DESC LIMIT 1""")
+
+
     print(photo_id)
     if photo_id:
         photo_url = f"https://raw.githubusercontent.com/skachpro/photos_lyceum_bot/refs/heads/main/photos/{photo_id[0][0]}.jpg"
@@ -377,12 +347,9 @@ async def stolova_photo(message: Message, state: FSMContext):
     photo_id = message.photo[-1].file_id
     await state.update_data(photo=photo_id)
 
-    with sq.connect("app/lyceum.db") as con:
-        cur = con.cursor()
-        cur.execute("""
-            INSERT INTO eat(photo_id) VALUES(?)
-        """, (photo_id,))
-        con.commit()
+    await db.execute_query("""
+        INSERT INTO eat(photo_id) VALUES(?)
+    """, (photo_id,))
     await state.clear()
     file_info = await bot.get_file(photo_id)
     file_path = file_info.file_path
@@ -404,11 +371,7 @@ async def stolova_photo(message: Message, state: FSMContext):
 
 @router.message(F.text=='Дошка оголошень 📌')
 async def alert_desk(message: Message):
-    with sq.connect("app/lyceum.db") as con:
-        cur = con.cursor()
-        al_desk = cur.execute("""
-           SELECT photo_id,text FROM alert_desk ORDER BY id DESC LIMIT 1
-        """).fetchall()
+    al_desk = await db.execute_query("SELECT photo_id,text FROM alert_desk ORDER BY id DESC LIMIT 1")
     #print(al_desk)
     if al_desk:
         photo_id = al_desk[0][0]
@@ -425,23 +388,19 @@ class QAstep(StatesGroup):
 
 @router.message(F.text == "Відповісти на питання")
 async def qa_answ(message: Message, state: FSMContext):
-    with sq.connect("app/lyceum.db") as con:
-        await state.set_state(QAstep.step)
-        cur = con.cursor()
-        questions = cur.execute("""
-            SELECT id, name, question FROM question_answer WHERE answer = "None"
-        """).fetchall()
-        await state.update_data(step=0)
-        if questions:
-            question = questions[0]
-            await message.answer(
-                f'Звернувся:\n<b>{question[1]}</b>\n\nТекст:\n{question[2]}',
-                parse_mode="html",
-                reply_markup=kb.qa_navigation
-            )
-            await state.update_data(questions=questions)
-        else:
-            await message.answer("Немає доступних питань.")
+
+    questions = await db.execute_query("SELECT id, name, question FROM question_answer WHERE answer = 'None'")
+    await state.update_data(step=0)
+    if questions:
+        question = questions[0]
+        await message.answer(
+            f'Звернувся:\n<b>{question[1]}</b>\n\nТекст:\n{question[2]}',
+            parse_mode="html",
+            reply_markup=kb.qa_navigation
+        )
+        await state.update_data(questions=questions)
+    else:
+        await message.answer("Немає доступних питань.")
 
 @router.message(F.text == 'Далі ➡️')
 async def next_que(message: Message, state: FSMContext):
@@ -501,12 +460,7 @@ async def answer(message: Message, state: FSMContext):
     data = await state.get_data()
     answer = data['answer']
     question_id = data.get("current_question_id")
-    with sq.connect("app/lyceum.db") as con:
-        cur = con.cursor()
-        cur.execute("""
-            UPDATE question_answer SET answer = ? WHERE id = ?
-        """, (answer, question_id))
-        con.commit()
+    await db.execute_query("UPDATE question_answer SET answer = %s WHERE id = %s", (answer, question_id))
     await message.answer("Відповідь збережено.",reply_markup=kb.admin)
     await state.clear()
 
