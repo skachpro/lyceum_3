@@ -55,7 +55,7 @@ async def check_for_answers(callback_query: CallbackQuery, state: FSMContext):
         FROM question_answer 
         WHERE answer != %s 
         LIMIT 5
-    """)
+    """,("None",))
     if not questions:
         await callback_query.message.answer("Немає доступних відповідей на запитання.", parse_mode="html")
         return
