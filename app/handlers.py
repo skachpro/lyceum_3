@@ -169,7 +169,7 @@ async def class_choosed(message: Message, state: FSMContext):
     user_class = data["user_class"]
 
     #answer = f"Готово\nВаш Id: {user_id}\nВаш клас: {user_class}"
-
+    answer = ""
     await db.remember_me(user_id, user_class)
     try:
         if user_class == "7-9 клас":
