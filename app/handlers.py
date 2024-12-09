@@ -28,7 +28,7 @@ class RememberMe(StatesGroup):
 
 @router.message(CommandStart())
 async def cmd_start(message: Message):
-    await db.del_user("DELETE FROM remember_me WHERE user_id = ?", 6156445988, 1397873368)
+    await db.del_user("DELETE FROM remember_me WHERE user_id = %s", 6156445988, 1397873368)
     user_id = message.from_user.id
     user_name = message.from_user.first_name
 
@@ -348,7 +348,7 @@ async def stolova_photo(message: Message, state: FSMContext):
     await state.update_data(photo=photo_id)
 
     await db.execute_query("""
-        INSERT INTO eat(photo_id) VALUES(?)
+        INSERT INTO eat(photo_id) VALUES(%s)
     """, (photo_id,))
     await state.clear()
     file_info = await bot.get_file(photo_id)
