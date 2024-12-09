@@ -129,8 +129,8 @@ async def que_user(user_id,name,question):
     async with db_pool.acquire() as conn:
         async with conn.cursor() as cur:
             await cur.execute("""
-                INSERT INTO question_answer(user_id,name,question,time_que) VALUES(%s,%s,%s,%s)
-            """, (user_id,name,question,time))
+                INSERT INTO question_answer(user_id,name,question,answer,time_que) VALUES(%s,%s,%s,%s)
+            """, (user_id,name,question,"None",time))
 async def del_user(query,*users):
     global db_pool
     if not db_pool:
