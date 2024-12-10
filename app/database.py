@@ -111,7 +111,7 @@ async def remember_me(user_id, user_class):
     async with db_pool.acquire() as conn:
         async with conn.cursor() as cur:
             await cur.execute("""
-                INSERT INTO remember_me (user_id,user_class) VALUES(%s,%s)
+                INSERT INTO users (user_id,user_class) VALUES(%s,%s)
             """, (user_id, user_class))
 
 async def que_user(user_id,name,question):
