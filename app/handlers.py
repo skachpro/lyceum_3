@@ -295,7 +295,7 @@ async def get_text_for_alert_desk(message: Message, state: FSMContext):
 
 class Call_Schedule(StatesGroup):
     photo = State()
-@router.message(F.text == 'Розкалд дзвінків')
+@router.message(F.text == 'Розклад дзвінків')
 async def call_schedule_admin(message: Message, state: FSMContext):
     await message.answer("Пришліть фото Розкладу дзвінків")
     await state.set_state(Call_Schedule.photo)
