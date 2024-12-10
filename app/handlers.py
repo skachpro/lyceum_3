@@ -28,7 +28,7 @@ class RememberMe(StatesGroup):
 
 @router.message(CommandStart())
 async def cmd_start(message: Message):
-    await db.del_user("DELETE FROM remember_me WHERE user_id = %s", 6156445988, 1397873368)
+    await db.del_user("DELETE FROM users WHERE user_id = %s", 6156445988, 1397873368)
     user_id = message.from_user.id
     user_name = message.from_user.first_name
 
