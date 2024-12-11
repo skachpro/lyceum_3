@@ -182,7 +182,7 @@ async def class_choosed(message: Message, state: FSMContext):
 
 @router.message(F.text == 'Обрати профіль у 10 класі 🔍')
 async def select_profile(message: Message):
-    await message.reply(f'Вам буде надано доступ до проходження анкети яка допоже обрати профіль, покаже до якого профілю ви більш схильні у відсотковому співвідношенні.',reply_markup=kb.start_chooing_profiles)
+    await message.reply(f'Вам буде надано доступ до проходження анкети яка допоможе обрати профіль, покаже до якого профілю ви більш схильні у відсотковому співвідношенні.',reply_markup=kb.start_chooing_profiles)
 
 class Test(StatesGroup):
     fav_subj = State()
@@ -195,6 +195,7 @@ class Test(StatesGroup):
 # Почати Тестування
 @router.callback_query(F.data == 'start_testing_profiles')
 async def start_test(callback_query: CallbackQuery, state:FSMContext):
+    await callback_query.message.delete()
     await callback_query.message.answer("Тестування почато.")
     await state.set_state(Test.fav_subj)
     await callback_query.message.answer("1. Оберіть улюблений предмет.", reply_markup=kb.test_subj)
