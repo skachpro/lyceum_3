@@ -180,9 +180,136 @@ async def class_choosed(message: Message, state: FSMContext):
         await message.answer(answer, parse_mode='HTML', reply_markup=kb.start)
     await state.clear()
 
-@router.message(F.text=='Обрати профіль у 10 класі 🔍')
+@router.message(F.data == 'choose_the_profile')
 async def select_profile(message: Message):
-    await message.reply(f'Обрати профіль можна в іншому Телеграм-боті. Для переходу натисніть на кнопку під повідомленням.',reply_markup=kb.profile)
+    await message.reply(f'Вам буде надано доступ до проходження анкети яка допоже обрати профіль, покаже до якого профілю ви більш схильні у відсотковому співвідношенні.',reply_markup=kb.start_chooing_profiles)
+
+class Test(StatesGroup):
+    fav_subj = State()
+    skills = State()
+    develop_skills = State()
+    favorite_tasks = State()
+    free_time = State()
+    future_profession = State()
+
+# Почати Тестування
+@router.message(F.data == 'start_testing_profiles')
+async def start_test(callback_query: CallbackQuery, state:FSMContext):
+    await callback_query.message.answer("Тестування почато.")
+    await state.set_state(Test.fav_subj)
+    await callback_query.message.answer("1. Оберіть улюблений предмет.", reply_markup=kb.test_subj)
+
+
+#Початок Відлову відповідей
+@router.callback_query(Test.fav_subj)
+async def que1(callback_query: CallbackQuery, state: FSMContext):
+    # user_id = callback_query.from_user.id
+    answer = callback_query.data
+    # await db.add_subj(answer, user_id)
+    await state.update_data(fav_subj=answer)
+    await callback_query.answer(f'Відповідь зараховано')
+    await state.set_state(Test.skills)
+    await callback_query.message.edit_text(f"2. Що вам вдається найкраще?", reply_markup=kb.skills)
+
+@router.callback_query(Test.skills)
+async def que2(callback_query: CallbackQuery, state: FSMContext):
+    answer = callback_query.data
+    await state.update_data(skills=answer)
+    await callback_query.answer(f'Відповідь зараховано')
+    await state.set_state(Test.develop_skills)
+    await callback_query.message.edit_text(f"3. Які навички хочете розвивати?", reply_markup=kb.develop_skills)
+
+@router.callback_query(Test.develop_skills)
+async def que3(callback_query: CallbackQuery, state: FSMContext):
+    answer = callback_query.data
+    await state.update_data(develop_skills=answer)
+    await callback_query.answer(f'Відповідь зараховано')
+    await state.set_state(Test.favorite_tasks)
+    await callback_query.message.edit_text(f"4. Які завдання вам найбільше подобається виконувати?", reply_markup=kb.favorite_tasks)
+
+@router.callback_query(Test.favorite_tasks)
+async def que3(callback_query: CallbackQuery, state: FSMContext):
+    answer = callback_query.data
+    await state.update_data(favorite_tasks=answer)
+    await callback_query.answer(f'Відповідь зараховано')
+    await state.set_state(Test.free_time)
+    await callback_query.message.edit_text(f"5. Як проводите вільний час?", reply_markup=kb.free_time)
+
+@router.callback_query(Test.free_time)
+async def que4(callback_query: CallbackQuery, state: FSMContext):
+    answer = callback_query.data
+    await state.update_data(free_time=answer)
+    await callback_query.answer(f'Відповідь зараховано')
+    await state.set_state(Test.future_profession)
+    await callback_query.message.edit_text(f"6. Ким хочете працювати?", reply_markup=kb.future_profession)
+
+@router.callback_query(Test.future_profession)
+async def test_end(callback_query: CallbackQuery, state: FSMContext):
+    answer = callback_query.data
+    await state.update_data(future_profesion=answer)
+    await callback_query.answer(f'Відповідь зараховано')
+    await callback_query.message.edit_text(f"Тест Завершено!")
+    data = await state.get_data()
+    math = 0
+    it = 0
+    history = 0
+    law = 0
+    geography = 0
+    chem_bio = 0
+    ukr_philo = 0
+    foreign_philo = 0
+    sports_military = 0
+    art = 0
+    #await callback_query.message.answer(", ".join(map(str, data.values())))
+    for value in data.values():
+        if value == 'math':
+            math += 1
+        elif value == 'it':
+            it += 1
+        elif value == 'history':
+            history += 1
+        elif value == 'geography':
+            geography += 1
+        elif value == 'chem_bio':
+            chem_bio += 1
+        elif value == 'ukr_philo':
+            ukr_philo += 1
+        elif value == 'law':
+            law += 1
+        elif value == 'foreign_philo':
+            foreign_philo += 1
+        elif value == 'sports_military':
+            sports_military += 1
+        elif value == 'art':
+            art += 1
+
+    await callback_query.message.edit_text(
+        f"<b>Схильність до:</b>\n"
+        f"<code>Математики: {math * 16}%\n"
+        f"Інформатики: {it * 16}%\n"
+        f"Історії: {history * 16}%\n"
+        f"Географії: {geography * 16}%\n"
+        f"Хімії/Біології: {chem_bio * 16}%\n"
+        f"Української філології: {ukr_philo * 16}%\n"
+        f"Правового профілю: {law * 16}%\n"
+        f"Іноземної філології: {foreign_philo * 16}%\n"
+        f"Військово/Спортивного профілю: {sports_military * 16}%\n"
+        f"Художньо-Естетичного профілю: {art * 16}%</code>",
+        parse_mode="html"
+    )
+    data = {
+        "Математика": math * 16,
+        "Інформатика": it * 16,
+        "Історія": history * 16,
+        "Географія": geography * 16,
+        "Хімія/Біологія": chem_bio * 16,
+        "Українська філологія": ukr_philo * 16,
+        "Правовий профіль": law * 16,
+        "Іноземна філологія": foreign_philo * 16,
+        "Військово/Спортивний профіль": sports_military * 16,
+        "Художньо-Естетичний профіль": art * 16
+    }
+    await state.clear()
 
 @router.message(F.text == 'Запитання/Відповідь 💬')
 async def qa(message:Message):
