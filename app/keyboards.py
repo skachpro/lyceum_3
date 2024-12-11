@@ -35,12 +35,12 @@ kbd_for_young_stud = ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text=f'Розклад 📋'),KeyboardButton(text="Дошка оголошень 📌")],
     [KeyboardButton(text="Запитання/Відповідь 💬")],
     [KeyboardButton(text="Меню їдальні 🍽️")],
-    [KeyboardButton(text=f"Обрати профіль у 10 класі 🔍", url="https://t.me/Lyceum_Profile_Selection_bot")]
-])
-
-profile = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text=f"Обрати профіль у 10 класі 🔍",callback_data="choose_the_profile")]
 ])
+
+# profile = InlineKeyboardMarkup(inline_keyboard=[
+#     [InlineKeyboardButton(text=f"Обрати профіль у 10 класі 🔍",callback_data="choose_the_profile")]
+# ])
 start_chooing_profiles= InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="Почати тестування 💼",callback_data="start_testing_profiles")]
 ])

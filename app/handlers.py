@@ -180,7 +180,7 @@ async def class_choosed(message: Message, state: FSMContext):
         await message.answer(answer, parse_mode='HTML', reply_markup=kb.start)
     await state.clear()
 
-@router.message(F.data == 'choose_the_profile')
+@router.message(F.text == 'Обрати профіль у 10 класі 🔍')
 async def select_profile(message: Message):
     await message.reply(f'Вам буде надано доступ до проходження анкети яка допоже обрати профіль, покаже до якого профілю ви більш схильні у відсотковому співвідношенні.',reply_markup=kb.start_chooing_profiles)
 
