@@ -35,7 +35,7 @@ kbd_for_young_stud = ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text=f'Розклад 📋'),KeyboardButton(text="Дошка оголошень 📌")],
     [KeyboardButton(text="Запитання/Відповідь 💬")],
     [KeyboardButton(text="Меню їдальні 🍽️")],
-    [InlineKeyboardButton(text=f"Обрати профіль у 10 класі 🔍",callback_data="choose_the_profile")]
+    [KeyboardButton(text=f"Обрати профіль у 10 класі 🔍",callback_data="choose_the_profile")]
 ])
 
 # profile = InlineKeyboardMarkup(inline_keyboard=[
