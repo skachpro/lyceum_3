@@ -193,7 +193,7 @@ class Test(StatesGroup):
     future_profession = State()
 
 # Почати Тестування
-@router.message(F.data == 'start_testing_profiles')
+@router.callback_query(F.data == 'start_testing_profiles')
 async def start_test(callback_query: CallbackQuery, state:FSMContext):
     await callback_query.message.answer("Тестування почато.")
     await state.set_state(Test.fav_subj)
