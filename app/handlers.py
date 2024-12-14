@@ -1,6 +1,10 @@
 from datetime import datetime, timedelta, date, time
 from aiogram.filters.logic import or_f
-
+from aiogram.types import (ReplyKeyboardMarkup,
+                           KeyboardButton,
+                           InlineKeyboardMarkup,
+                           InlineKeyboardButton)
+from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
 import sqlite3 as sq
 from aiogram import F, Router, Bot
 from aiogram.filters import CommandStart, Command
@@ -251,6 +255,7 @@ async def test_end(callback_query: CallbackQuery, state: FSMContext):
     await callback_query.answer(f'Відповідь зараховано')
     await callback_query.message.edit_text(f"Тест Завершено!")
     data = await state.get_data()
+    await state.clear()
     math = 0
     it = 0
     history = 0
@@ -283,7 +288,21 @@ async def test_end(callback_query: CallbackQuery, state: FSMContext):
             sports_military += 1
         elif value == 'art':
             art += 1
-
+    data = {
+        "математичний": math * 16,
+        "інформаційний": it * 16,
+        "історичний": history * 16,
+        "географічний": geography * 16,
+        "хіміко-біологічний": chem_bio * 16,
+        "української-філології": ukr_philo * 16,
+        "правовий": law * 16,
+        "іноземної-філології": foreign_philo * 16,
+        "військово-спортивний": sports_military * 16,
+        "художньо-естетичний": art * 16
+    }
+    max_key = max(data, key=data.get)
+    button = InlineKeyboardBuilder()
+    button.add(InlineKeyboardButton(text="Дізнатися більше", url=f"http://tbl.km.ua/{max_key}"))
     await callback_query.message.edit_text(
         f"<b>Схильність до:</b>\n"
         f"<code>Математики: {math * 16}%\n"
@@ -295,22 +314,13 @@ async def test_end(callback_query: CallbackQuery, state: FSMContext):
         f"Правового профілю: {law * 16}%\n"
         f"Іноземної філології: {foreign_philo * 16}%\n"
         f"Військово/Спортивного профілю: {sports_military * 16}%\n"
-        f"Художньо-Естетичного профілю: {art * 16}%</code>",
-        parse_mode="html"
+        f"Художньо-Естетичного профілю: {art * 16}%</code>"
+        f'Згідно з результатами анкетування найбільше вам підходить: <b>{max_key}</b> профіль',
+        parse_mode="html", reply_markup=button.as_markup()
     )
-    data = {
-        "Математика": math * 16,
-        "Інформатика": it * 16,
-        "Історія": history * 16,
-        "Географія": geography * 16,
-        "Хімія/Біологія": chem_bio * 16,
-        "Українська філологія": ukr_philo * 16,
-        "Правовий профіль": law * 16,
-        "Іноземна філологія": foreign_philo * 16,
-        "Військово/Спортивний профіль": sports_military * 16,
-        "Художньо-Естетичний профіль": art * 16
-    }
-    await state.clear()
+
+
+
 
 @router.message(F.text == 'Запитання/Відповідь 💬')
 async def qa(message:Message):
