@@ -314,7 +314,7 @@ async def test_end(callback_query: CallbackQuery, state: FSMContext):
         f"Правового профілю: {law * 16}%\n"
         f"Іноземної філології: {foreign_philo * 16}%\n"
         f"Військово/Спортивного профілю: {sports_military * 16}%\n"
-        f"Художньо-Естетичного профілю: {art * 16}%</code>"
+        f"Художньо-Естетичного профілю: {art * 16}%</code>\n"
         f'Згідно з результатами анкетування найбільше вам підходить: <b>{max_key}</b> профіль',
         parse_mode="html", reply_markup=button.as_markup()
     )
