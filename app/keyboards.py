@@ -87,6 +87,11 @@ rozklad = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Розклад уроків 📋', callback_data='lesson_plan',url='https://client.rozklad.org/files/rozklad/rr/r_2755.html?1732728631375#c')]
 ])
 
+profile_menu = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text="Перелік Профілів 📋", callback_data="profile_catalog")],
+    [InlineKeyboardButton(text="Взнати ваш профіль 🤔", callback_data="check_my_profile")]
+])
+
 # Анкета
 test_subj = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Українська мова', callback_data="ukr_philo"),
