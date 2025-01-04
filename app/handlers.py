@@ -186,13 +186,14 @@ async def class_choosed(message: Message, state: FSMContext):
 
 @router.message(F.text == 'Обрати профіль у 10 класі 🔍')
 async def select_profile(message: Message):
-    await answer.message(f"Оберіть наступну дію...",reply_markup=kb.profile_menu)
+    await message.answer(f"Оберіть наступну дію...",reply_markup=kb.profile_menu)
 
 @router.callback_query(F.data == "check_my_profile")
 async def check_my_profile(callback_query: CallbackQuery):
     await callback_query.message.edit_text(
         f'Вам буде надано анкету яка допоможе обрати профіль, покаже до якого профілю ви більш схильні у відсотковому співвідношенні.',
         reply_markup=kb.start_chooing_profiles)
+#catalog_profile
 
 class Test(StatesGroup):
     fav_subj = State()
