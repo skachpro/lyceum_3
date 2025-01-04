@@ -102,6 +102,13 @@ async def create_tables():
             time_que DATETIME
         )
     """)
+    execute_query_sync("""
+        CREATE TABLE IF NOT EXISTS profiles(
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            profile_name VARCHAR(255),
+            profile_info VARCHAR(255)
+        )
+    """)
     print("Таблиці створено або вже існують")
 
 async def remember_me(user_id, user_class):
