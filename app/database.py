@@ -106,7 +106,7 @@ async def create_tables():
         CREATE TABLE IF NOT EXISTS profiles(
             id INT AUTO_INCREMENT PRIMARY KEY,
             profile_name VARCHAR(255),
-            profile_info VARCHAR(255)
+            profile_info TEXT
         )
     """)
     print("Таблиці створено або вже існують")
