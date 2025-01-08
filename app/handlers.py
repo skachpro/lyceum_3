@@ -193,7 +193,65 @@ async def check_my_profile(callback_query: CallbackQuery):
     await callback_query.message.edit_text(
         f'Вам буде надано анкету яка допоможе обрати профіль, покаже до якого профілю ви більш схильні у відсотковому співвідношенні.',
         reply_markup=kb.start_chooing_profiles)
-#catalog_profile
+
+class ProfileStates(StatesGroup):
+    step = State()
+
+@router.message(F.text == "Перелік профілів 📋")
+async def profiles(message: Message, state: FSMContext):
+    profiles_list = await db.get_profiles()
+    if not profiles_list:
+        await message.answer("Профілі не знайдені.")
+        return
+
+
+    await state.set_state(ProfileStates.step)
+    await state.update_data(step=0)
+
+
+    response = (
+        f"<b>Назва профілю:</b> {profiles_list[0]['profile_name']}\n"
+        f"<b>Інформація:</b> {profiles_list[0]['profile_info']}"
+    )
+    await message.answer(response, parse_mode='HTML', reply_markup=kb.profile_catalog )
+
+
+@router.callback_query(F.data == "next")
+async def about_next(callback_query: CallbackQuery, state: FSMContext):
+    data = await state.get_data()
+    step = data.get("step", 0) + 1
+    print(step)
+
+    profiles_list = await db.get_profiles()
+    if step < len(profiles_list):
+        response = (
+            f"<b>Назва профілю:</b> {profiles_list[step]['profile_name']}\n"
+            f"<b>Інформація:</b> {profiles_list[step]['profile_info']}"
+        )
+        await callback_query.message.edit_text(response, parse_mode='HTML', reply_markup=kb.profile_catalog )
+        print(response)
+        await state.update_data(step=step)
+    else:
+        await callback_query.answer("Більше профілів немає.")
+
+@router.callback_query(F.data == "back")
+async def about_next(callback_query: CallbackQuery, state: FSMContext):
+
+    profiles_list = await db.get_profiles()
+    data = await state.get_data()
+    step = data.get("step", len(profiles_list)) - 1
+    print(step)
+
+    if step >= 0:
+        response = (
+            f"<b>Назва профілю:</b> {profiles_list[step]['profile_name']}\n"
+            f"<b>Інформація:</b> {profiles_list[step]['profile_info']}"
+        )
+        await callback_query.message.edit_text(response, parse_mode='HTML', reply_markup=kb.profile_catalog )
+        print(response)
+        await state.update_data(step=step)
+    else:
+        await callback_query.answer("Більше профілів немає.")
 
 class Test(StatesGroup):
     fav_subj = State()
