@@ -204,7 +204,6 @@ async def profiles(callback_query: CallbackQuery, state: FSMContext):
         await callback_query.message.answer("Профілі не знайдені.")
         return
 
-    print(profiles_list)
     await state.set_state(ProfileStates.step)
     await state.update_data(step=0)
 
