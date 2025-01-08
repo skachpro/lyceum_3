@@ -211,7 +211,12 @@ async def profiles(callback_query: CallbackQuery, state: FSMContext):
         f"<b>Назва профілю:</b> {profiles_list[0]['profile_name']}\n"
         f"<b>Інформація:</b> {profiles_list[0]['profile_info']}"
     )
-    await callback_query.message.answer(response, parse_mode='HTML', reply_markup=kb.profile_catalog )
+    profile_name = profiles_list[0]['profile_name']
+    keyboard_profiles = InlineKeyboardBuilder()
+    keyboard_profiles.add(InlineKeyboardButton(text="◀️", callback_data="back_profile"),
+                          InlineKeyboardButton(text="▶️", callback_data="next_profile"))
+    keyboard_profiles.add(InlineKeyboardButton(text="Дізнатися більше", url=f"http://tbl.km.ua/{profile_name}"))
+    await callback_query.message.edit_text(response, parse_mode='HTML', reply_markup=keyboard_profiles.as_markup())
 
 
 @router.callback_query(F.data == "next_profile")
@@ -251,7 +256,7 @@ async def about_next(callback_query: CallbackQuery, state: FSMContext):
         )
         profile_name = profiles_list[step]['profile_name']
         keyboard_profiles = InlineKeyboardBuilder()
-        keyboard_profiles.add(InlineKeyboardButton(text="◀️", callback_data="back_profile"), InlineKeyboardButton(text="▶️", callback_data="next_profile"))
+        keyboard_profiles.add([InlineKeyboardButton(text="◀️", callback_data="back_profile"), InlineKeyboardButton(text="▶️", callback_data="next_profile")])
         keyboard_profiles.add(InlineKeyboardButton(text="Дізнатися більше", url=f"http://tbl.km.ua/{profile_name}"))
         await callback_query.message.edit_text(response, parse_mode='HTML', reply_markup=keyboard_profiles.as_markup())
         
