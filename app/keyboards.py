@@ -172,6 +172,6 @@ future_profession = InlineKeyboardMarkup(inline_keyboard=[
 
 # анкета закінчилась
 profile_catalog = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text="◀️", callback_data="back"), InlineKeyboardButton(text="▶️", callback_data="next")],
+    [InlineKeyboardButton(text="◀️", callback_data="back_profile"), InlineKeyboardButton(text="▶️", callback_data="next_profile")],
     [InlineKeyboardButton(text="Дізнатися більше", url="http://tbl.km.ua/")]
 ])

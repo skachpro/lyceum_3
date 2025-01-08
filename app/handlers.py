@@ -204,7 +204,7 @@ async def profiles(callback_query: CallbackQuery, state: FSMContext):
         await callback_query.message.answer("Профілі не знайдені.")
         return
 
-
+    print(profiles_list)
     await state.set_state(ProfileStates.step)
     await state.update_data(step=0)
 
@@ -216,7 +216,7 @@ async def profiles(callback_query: CallbackQuery, state: FSMContext):
     await callback_query.message.answer(response, parse_mode='HTML', reply_markup=kb.profile_catalog )
 
 
-@router.callback_query(F.data == "next")
+@router.callback_query(F.data == "next_profile")
 async def about_next(callback_query: CallbackQuery, state: FSMContext):
     data = await state.get_data()
     step = data.get("step", 0) + 1
@@ -234,7 +234,7 @@ async def about_next(callback_query: CallbackQuery, state: FSMContext):
     else:
         await callback_query.answer("Більше профілів немає.")
 
-@router.callback_query(F.data == "back")
+@router.callback_query(F.data == "back_profile")
 async def about_next(callback_query: CallbackQuery, state: FSMContext):
 
     profiles_list = await db.get_profiles()
