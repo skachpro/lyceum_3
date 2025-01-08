@@ -229,7 +229,7 @@ async def about_next(callback_query: CallbackQuery, state: FSMContext):
             f"<b>Інформація:</b> {profiles_list[step]['profile_info']}"
         )
         await callback_query.message.edit_text(response, parse_mode='HTML', reply_markup=kb.profile_catalog )
-        print(response)
+        
         await state.update_data(step=step)
     else:
         await callback_query.answer("Більше профілів немає.")
@@ -248,7 +248,7 @@ async def about_next(callback_query: CallbackQuery, state: FSMContext):
             f"<b>Інформація:</b> {profiles_list[step]['profile_info']}"
         )
         await callback_query.message.edit_text(response, parse_mode='HTML', reply_markup=kb.profile_catalog )
-        print(response)
+        
         await state.update_data(step=step)
     else:
         await callback_query.answer("Більше профілів немає.")
