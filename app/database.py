@@ -152,7 +152,7 @@ async def get_profiles():
     async with db_pool.acquire() as conn:
         async with conn.cursor() as cur:
             await cur.execute("""
-                SELECT * FROM profile_info
+                SELECT * FROM profiles
             """)
             results = await cur.fetchall()  # Получение всех строк
             return results
