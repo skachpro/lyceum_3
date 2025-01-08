@@ -197,11 +197,11 @@ async def check_my_profile(callback_query: CallbackQuery):
 class ProfileStates(StatesGroup):
     step = State()
 
-@router.message(F.text == "Перелік профілів 📋")
-async def profiles(message: Message, state: FSMContext):
+@router.callback_query(F.data == "profile_catalog")
+async def profiles(callback_query: CallbackQuery, state: FSMContext):
     profiles_list = await db.get_profiles()
     if not profiles_list:
-        await message.answer("Профілі не знайдені.")
+        await callback_query.message.answer("Профілі не знайдені.")
         return
 
 
@@ -213,7 +213,7 @@ async def profiles(message: Message, state: FSMContext):
         f"<b>Назва профілю:</b> {profiles_list[0]['profile_name']}\n"
         f"<b>Інформація:</b> {profiles_list[0]['profile_info']}"
     )
-    await message.answer(response, parse_mode='HTML', reply_markup=kb.profile_catalog )
+    await callback_query.message.answer(response, parse_mode='HTML', reply_markup=kb.profile_catalog )
 
 
 @router.callback_query(F.data == "next")
