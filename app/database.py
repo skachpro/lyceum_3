@@ -1,5 +1,6 @@
 import os
 import pymysql
+import aiomysql
 from aiomysql import create_pool
 from aiomysql.pool import Pool
 from datetime import *
@@ -150,7 +151,7 @@ async def get_profiles():
     if not db_pool:
         raise RuntimeError("Database pool is not initialized")
     async with db_pool.acquire() as conn:
-        async with conn.cursor() as cur:
+        async with conn.cursor(aiomysql.DictCursor) as cur:
             await cur.execute("""
                 SELECT * FROM profiles
             """)
