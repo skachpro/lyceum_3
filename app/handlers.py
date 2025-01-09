@@ -190,7 +190,7 @@ async def select_profile(message: Message):
 @router.callback_query(F.data == "check_my_profile")
 async def check_my_profile(callback_query: CallbackQuery):
     await callback_query.message.edit_text(
-        f'Вам буде надано анкету яка допоможе обрати профіль, покаже до якого профілю ви більш схильні у відсотковому співвідношенні.',
+        f'Вам пропонується пройти анкетування, що допоможе зорієнтуватися у виборі профілю для навчання у 10 та 11 класах, враховуючи ваші здібності, нахили та уподобання.',
         reply_markup=kb.start_chooing_profiles)
 
 class ProfileStates(StatesGroup):
