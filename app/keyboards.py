@@ -89,7 +89,7 @@ rozklad = InlineKeyboardMarkup(inline_keyboard=[
 
 profile_menu = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="Перелік Профілів 📋", callback_data="profile_catalog")],
-    [InlineKeyboardButton(text="Взнати ваш профіль 🤔", callback_data="check_my_profile")]
+    [InlineKeyboardButton(text="Взнайте профіль з результату анкетування", callback_data="check_my_profile")]
 ])
 
 # Анкета

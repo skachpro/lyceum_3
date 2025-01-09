@@ -213,8 +213,8 @@ async def profiles(callback_query: CallbackQuery, state: FSMContext):
     )
     profile_name = profiles_list[0]['profile_name']
     profile_catalog = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="◀️", callback_data="back_profile"),
-         InlineKeyboardButton(text="▶️", callback_data="next_profile")],
+        [InlineKeyboardButton(text="◀️ Назад", callback_data="back_profile"),
+         InlineKeyboardButton(text="Вперед ▶️", callback_data="next_profile")],
         [InlineKeyboardButton(text="Дізнатися більше", url=f"http://tbl.km.ua/{profile_name}")]
     ])
     await callback_query.message.edit_text(response, parse_mode='HTML', reply_markup=profile_catalog)
@@ -234,8 +234,8 @@ async def about_next(callback_query: CallbackQuery, state: FSMContext):
         )
         profile_name = profiles_list[step]['profile_name']
         profile_catalog = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="◀️", callback_data="back_profile"),
-             InlineKeyboardButton(text="▶️", callback_data="next_profile")],
+            [InlineKeyboardButton(text="◀️ Назад", callback_data="back_profile"),
+             InlineKeyboardButton(text="Вперед ▶️", callback_data="next_profile")],
             [InlineKeyboardButton(text="Дізнатися більше", url=f"http://tbl.km.ua/{profile_name}")]
         ])
         await callback_query.message.edit_text(response, parse_mode='HTML', reply_markup=profile_catalog)
@@ -259,8 +259,8 @@ async def about_next(callback_query: CallbackQuery, state: FSMContext):
         )
         profile_name = profiles_list[step]['profile_name']
         profile_catalog = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="◀️", callback_data="back_profile"),
-             InlineKeyboardButton(text="▶️", callback_data="next_profile")],
+            [InlineKeyboardButton(text="◀️ Назад", callback_data="back_profile"),
+             InlineKeyboardButton(text="Вперед ▶️", callback_data="next_profile")],
             [InlineKeyboardButton(text="Дізнатися більше", url=f"http://tbl.km.ua/{profile_name}")]
         ])
         await callback_query.message.edit_text(response, parse_mode='HTML', reply_markup=profile_catalog)
