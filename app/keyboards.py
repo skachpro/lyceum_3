@@ -132,8 +132,8 @@ develop_skills = InlineKeyboardMarkup(inline_keyboard=[
 ])
 
 favorite_tasks = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text="Аналітичні завдання", callback_data="math"),
-     InlineKeyboardButton(text="Творчі проєкти", callback_data="art")],
+    [InlineKeyboardButton(text="Аналітичні завдання", callback_data="math")],
+    [InlineKeyboardButton(text="Творчі проєкти", callback_data="art")],
     [InlineKeyboardButton(text="Практичні експерименти", callback_data="chem_bio")],
     [InlineKeyboardButton(text="Написання текстів", callback_data="ukr_philology")],
     [InlineKeyboardButton(text="Вирішення логічних задач", callback_data="math")],
