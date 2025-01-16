@@ -489,6 +489,7 @@ async def get_text_for_alert_desk(message: Message, state: FSMContext):
     data = await state.get_data()
     photo_id = data.get("photo_id", "null")
     print("Фотка:",photo_id)
+    print("Текст:", text)
 
     await db.execute_query("""
         INSERT INTO alert_desk (photo_id, text) VALUES (%s,%s)
@@ -590,7 +591,7 @@ async def stolova_photo(message: Message, state: FSMContext):
 @router.message(F.text=='Дошка оголошень 📌')
 async def alert_desk(message: Message):
     al_desk = await db.execute_query("SELECT photo_id,text FROM alert_desk ORDER BY id DESC LIMIT 1")
-    #print(al_desk)
+    print(al_desk)
     if al_desk:
         photo_id = al_desk[0][0]
         text = al_desk[0][1]
