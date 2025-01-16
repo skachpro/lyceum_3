@@ -600,17 +600,33 @@ async def stolova_photo(message: Message, state: FSMContext):
     await message.answer_photo(photo=photo_url)
 
 
-@router.message(F.text=='Дошка оголошень 📌')
+@router.message(F.text == 'Дошка оголошень 📌')
 async def alert_desk(message: Message):
-    al_desk = await db.execute_query("SELECT photo_id,text FROM alert_desk ORDER BY id DESC LIMIT 1")
-    print(al_desk)
-    if al_desk:
-        photo_id = al_desk[0][0]
-        text = al_desk[0][1]
-        photo_url = f"https://raw.githubusercontent.com/skachpro/photos_lyceum_bot/refs/heads/main/photos/{photo_id}.jpg"
-        await message.answer_photo(photo=photo_url, caption=text)
-    else:
-        await message.answer("Наразі оголошень немає")
+    try:
+        al_desk = await db.execute_query(
+            "SELECT photo_id, text FROM alert_desk ORDER BY id DESC LIMIT 1"
+        )
+        print("Результат запиту:", al_desk)
+
+        if al_desk:
+            photo_id = al_desk[0][0]
+            text = al_desk[0][1]
+
+            if photo_id:
+
+                photo_url = f"https://raw.githubusercontent.com/skachpro/photos_lyceum_bot/refs/heads/main/photos/{photo_id}.jpg"
+
+
+                await message.answer_photo(photo=photo_url, caption=text)
+            else:
+
+                await message.answer(text)
+        else:
+
+            await message.answer("Наразі оголошень немає")
+    except Exception as e:
+        print("Помилка в alert_desk:", e)
+        await message.answer("Сталася помилка при завантаженні оголошень.")
 
 
 class QAstep(StatesGroup):
