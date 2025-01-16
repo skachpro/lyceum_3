@@ -487,30 +487,43 @@ async def get_text_for_alert_desk(message: Message, state: FSMContext):
     text = message.text
     await state.update_data(text=text)
     data = await state.get_data()
-    photo_id = data.get("photo_id", "None")
-    print("Фотка:",photo_id)
+    photo_id = data.get("photo_id")
+
+    print("Фотка:", photo_id)
     print("Текст:", text)
 
     await db.execute_query("""
-        INSERT INTO alert_desk (photo_id, text) VALUES (%s,%s)
-    """, (photo_id,text))
+        INSERT INTO alert_desk (photo_id, text) VALUES (%s, %s)
+    """, (photo_id, text))
 
-    file_info = await bot.get_file(photo_id)
-    file_path = file_info.file_path
-    async with aiohttp.ClientSession() as session:
-        async with session.get(f"https://api.telegram.org/file/bot{os.getenv('BOT_API')}/{file_path}") as resp:
-            if resp.status == 200:
-                file_content = await resp.read()
-                file_name = f"{photo_id}.jpg"
+    if photo_id:
+        try:
+            file_info = await bot.get_file(photo_id)
+            file_path = file_info.file_path
 
-                result = upload_to_github(file_name, file_content)
-                await message.answer(result)
-                photo_url = f"https://raw.githubusercontent.com/skachpro/photos_lyceum_bot/refs/heads/main/photos/{photo_id}.jpg"
-            else:
-                await message.answer("Не вдалося завантажити фото.")
+            async with aiohttp.ClientSession() as session:
+                async with session.get(f"https://api.telegram.org/file/bot{os.getenv('BOT_API')}/{file_path}") as resp:
+                    if resp.status == 200:
+                        file_content = await resp.read()
+                        file_name = f"{photo_id}.jpg"
 
-    await message.answer_photo(photo=photo_url, caption=text)
 
+                        result = upload_to_github(file_name, file_content)
+                        await message.answer(result)
+
+
+                        photo_url = f"https://raw.githubusercontent.com/skachpro/photos_lyceum_bot/refs/heads/main/photos/{photo_id}.jpg"
+
+
+                        await message.answer_photo(photo=photo_url, caption=text)
+                    else:
+                        await message.answer("Не вдалося завантажити фото.")
+        except Exception as e:
+            print("Помилка завантаження фото:", e)
+            await message.answer("Виникла помилка під час обробки фото.")
+    else:
+
+        await message.answer(f"Оголошення додано: {text}")
 class Call_Schedule(StatesGroup):
     photo = State()
 @router.message(F.text == 'Розклад дзвінків')
