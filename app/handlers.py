@@ -487,7 +487,7 @@ async def get_text_for_alert_desk(message: Message, state: FSMContext):
     text = message.text
     await state.update_data(text=text)
     data = await state.get_data()
-    photo_id = data.get("photo_id", "null")
+    photo_id = data.get("photo_id", "None")
     print("Фотка:",photo_id)
     print("Текст:", text)
 
@@ -497,7 +497,6 @@ async def get_text_for_alert_desk(message: Message, state: FSMContext):
 
     file_info = await bot.get_file(photo_id)
     file_path = file_info.file_path
-
     async with aiohttp.ClientSession() as session:
         async with session.get(f"https://api.telegram.org/file/bot{os.getenv('BOT_API')}/{file_path}") as resp:
             if resp.status == 200:
