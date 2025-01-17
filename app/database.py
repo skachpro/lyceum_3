@@ -163,7 +163,7 @@ async def get_profiles():
             """)
             results = await cur.fetchall()  # Получение всех строк
             return results
-async def is_admin():
+async def admin_dict():
     global db_pool
     if not db_pool:
         raise RuntimeError("Database pool is not initialized")
