@@ -449,13 +449,8 @@ async def qa_res(message: Message, state: FSMContext):
 async def admin(message: Message):
     admin_list = []
     admin_dict = await db.admin_dict()
-    #print(admin_dict)
-    #((1, '6156445988'), (2, '1397873368'), (3, '5832908779'))
     for i in admin_dict:
         admin_list.append(int(i[1]))
-    #print(admin_list)
-    # if message.from_user.id != 6156445988 and message.from_user.id != 1397873368 and message.from_user.id != 5832908779:
-    #     return
     if message.from_user.id not in admin_list:
         return
     else:
@@ -468,8 +463,13 @@ class Alert(StatesGroup):
 
 @router.message(F.text == 'Дошка оголошень')
 async def al_desk_admin(message: Message,state:FSMContext):
-    await state.set_state(Alert.photo_id)
-    await message.answer(f'Пришліть фотографію.', reply_markup=kb.skip_photo)
+    admin_list = []
+    admin_dict = await db.admin_dict()
+    for i in admin_dict:
+        admin_list.append(int(i[1]))
+    if message.from_user.id in admin_list:
+        await state.set_state(Alert.photo_id)
+        await message.answer(f'Пришліть фотографію.', reply_markup=kb.skip_photo)
 
 @router.callback_query(F.data == 'skip_photo')
 async def skip_photo(callback_query: CallbackQuery, state: FSMContext):
@@ -537,8 +537,13 @@ class Call_Schedule(StatesGroup):
     photo = State()
 @router.message(F.text == 'Розклад дзвінків')
 async def call_schedule_admin(message: Message, state: FSMContext):
-    await message.answer("Пришліть фото Розкладу дзвінків")
-    await state.set_state(Call_Schedule.photo)
+    admin_list = []
+    admin_dict = await db.admin_dict()
+    for i in admin_dict:
+        admin_list.append(int(i[1]))
+    if message.from_user.id in admin_list:
+        await message.answer("Пришліть фото Розкладу дзвінків")
+        await state.set_state(Call_Schedule.photo)
 
 @router.message(Call_Schedule.photo)
 async def call_schedule_set_photo(message: Message, state: FSMContext):
@@ -579,8 +584,13 @@ class Stolova(StatesGroup):
 
 @router.message(F.text == 'Меню їдальні')
 async def stolovka_admin(message: Message, state: FSMContext):
-    await state.set_state(Stolova.photo)
-    await message.answer("Додайте фото Меню")
+    admin_list = []
+    admin_dict = await db.admin_dict()
+    for i in admin_dict:
+        admin_list.append(int(i[1]))
+    if message.from_user.id in admin_list:
+        await state.set_state(Stolova.photo)
+        await message.answer("Додайте фото Меню")
 
 @router.message(Stolova.photo)
 async def stolova_photo(message: Message, state: FSMContext):
@@ -644,19 +654,23 @@ class QAstep(StatesGroup):
 
 @router.message(F.text == "Відповісти на питання")
 async def qa_answ(message: Message, state: FSMContext):
-
-    questions = await db.execute_query("SELECT id, name, question FROM question_answer WHERE answer = 'None'")
-    await state.update_data(step=0)
-    if questions:
-        question = questions[0]
-        await message.answer(
-            f'Звернувся:\n<b>{question[1]}</b>\n\nТекст:\n{question[2]}',
-            parse_mode="html",
-            reply_markup=kb.qa_navigation
-        )
-        await state.update_data(questions=questions)
-    else:
-        await message.answer("Немає доступних питань.")
+    admin_list = []
+    admin_dict = await db.admin_dict()
+    for i in admin_dict:
+        admin_list.append(int(i[1]))
+    if message.from_user.id in admin_list:
+        questions = await db.execute_query("SELECT id, name, question FROM question_answer WHERE answer = 'None'")
+        await state.update_data(step=0)
+        if questions:
+            question = questions[0]
+            await message.answer(
+                f'Звернувся:\n<b>{question[1]}</b>\n\nТекст:\n{question[2]}',
+                parse_mode="html",
+                reply_markup=kb.qa_navigation
+            )
+            await state.update_data(questions=questions)
+        else:
+            await message.answer("Немає доступних питань.")
 
 @router.message(F.text == 'Далі ➡️')
 async def next_que(message: Message, state: FSMContext):
@@ -724,8 +738,13 @@ class IdtoUs(StatesGroup):
     id = State()
 @router.message(F.text == 'id to username')
 async def ituname(message: Message, state: FSMContext):
-    await message.answer("Скиньте Id")
-    await state.set_state(IdtoUs.id)
+    admin_list = []
+    admin_dict = await db.admin_dict()
+    for i in admin_dict:
+        admin_list.append(int(i[1]))
+    if message.from_user.id in admin_list:
+        await message.answer("Скиньте Id")
+        await state.set_state(IdtoUs.id)
 
 @router.message(IdtoUs.id)
 async def getid(message: Message, state: FSMContext):
