@@ -711,3 +711,29 @@ async def answer(message: Message, state: FSMContext):
     await message.answer("Відповідь збережено.",reply_markup=kb.admin)
     await state.clear()
 
+class IdtoUs(StatesGroup):
+    id = State()
+@router.message(F.text == 'id to username')
+async def ituname(message: Message, state: FSMContext):
+    await message.answer("Скиньте Id")
+    await state.set_state(IdtoUs.id)
+
+@router.message(IdtoUs.id)
+async def getid(message: Message, state: FSMContext):
+    user_id = message.text.strip()
+    if not user_id.isdigit():
+        await message.answer("Невірний Id (тільки цифри)")
+        return
+    try:
+        user_id = int(user_id)
+        chat = await bot.get_chat(user_id)
+        username = chat.username
+        if username:
+            await message.answer(f"Username: @{username}")
+        else:
+            await message.answer(f"У цього корситувача немає @username")
+            return
+    except Exception as e:
+        await message.answer(f"Помилка: {e}")
+
+    await state.clear()

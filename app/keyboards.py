@@ -54,7 +54,8 @@ admin = ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text=f"Відповісти на питання")],
     [KeyboardButton(text=f'Дошка оголошень')],
     [KeyboardButton(text=f"Розклад дзвінків")],
-    [KeyboardButton(text="Меню їдальні")]
+    [KeyboardButton(text="Меню їдальні")],
+    [KeyboardButton(text="id to username")]
 ])
 
 qa_navigation = ReplyKeyboardMarkup(
