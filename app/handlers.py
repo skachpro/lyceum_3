@@ -449,6 +449,7 @@ async def qa_res(message: Message, state: FSMContext):
 async def admin(message: Message):
     admin_list = []
     admin_dict = db.is_admin()
+    print(admin_dict)
     if message.from_user.id != 6156445988 and message.from_user.id != 1397873368 and message.from_user.id != 5832908779:
         return
     else:
