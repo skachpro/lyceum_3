@@ -110,6 +110,12 @@ async def create_tables():
             profile_info TEXT
         )
     """)
+    execute_query_sync("""
+            CREATE TABLE IF NOT EXISTS admins(
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                admin_id VARCHAR(255)
+            )
+        """)
     print("Таблиці створено або вже існують")
 
 
@@ -155,5 +161,16 @@ async def get_profiles():
             await cur.execute("""
                 SELECT * FROM profiles
             """)
+            results = await cur.fetchall()  # Получение всех строк
+            return results
+async def is_admin():
+    global db_pool
+    if not db_pool:
+        raise RuntimeError("Database pool is not initialized")
+    async with db_pool.acquire() as conn:
+        async with conn.cursor(aiomysql.DictCursor) as cur:
+            await cur.execute("""
+                    SELECT * FROM admins
+                """)
             results = await cur.fetchall()  # Получение всех строк
             return results
