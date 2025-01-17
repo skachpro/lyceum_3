@@ -448,7 +448,7 @@ async def qa_res(message: Message, state: FSMContext):
 @router.message(or_f(Command("admin"),(F.text == "Я з адміністрації ліцею 🏫🧑‍💼")))
 async def admin(message: Message):
     admin_list = []
-    admin_dict = db.admin_dict()
+    admin_dict = await db.admin_dict()
     print(admin_dict["admin_id"])
     if message.from_user.id != 6156445988 and message.from_user.id != 1397873368 and message.from_user.id != 5832908779:
         return
