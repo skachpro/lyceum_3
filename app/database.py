@@ -168,7 +168,7 @@ async def admin_dict():
     if not db_pool:
         raise RuntimeError("Database pool is not initialized")
     async with db_pool.acquire() as conn:
-        async with conn.cursor(aiomysql.DictCursor) as cur:
+        async with conn.cursor() as cur:
             await cur.execute("""
                     SELECT * FROM admins
                 """)
