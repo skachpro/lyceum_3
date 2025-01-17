@@ -449,11 +449,11 @@ async def qa_res(message: Message, state: FSMContext):
 async def admin(message: Message):
     admin_list = []
     admin_dict = await db.admin_dict()
-    print(admin_dict)
+    #print(admin_dict)
     #((1, '6156445988'), (2, '1397873368'), (3, '5832908779'))
     for i in admin_dict:
         admin_list.append(int(i[1]))
-    print(admin_list)
+    #print(admin_list)
     # if message.from_user.id != 6156445988 and message.from_user.id != 1397873368 and message.from_user.id != 5832908779:
     #     return
     if message.from_user.id not in admin_list:
